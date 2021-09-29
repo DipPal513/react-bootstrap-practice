@@ -2,24 +2,33 @@ import "./App.css";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 // or less ideally
-import { Card, Button } from "react-bootstrap";
+import { Card, Button, Col, Row,Spinner } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import News from "./Component/News/News";
 
 function App() {
+  const [news, setNews] = useState([]);
+  useEffect(() => {
+    fetch(
+      "https://newsapi.org/v2/everything?q=Apple&from=2021-09-29&sortBy=popularity&apiKey=e1c0a8d8d7bf41a79c65a3f38e1b2cfe"
+    )
+      .then((res) => res.json())
+      .then((data) => setNews(data.articles));
+  }, []);
   return (
-    <div className="App">
-      <h1>will using react bootstrap</h1>
-      <Card style={{ width: "18rem" }}>
-        <Card.Img variant="top" src="holder.js/100px180" />
-        <Card.Body>
-          <Card.Title>Card Title</Card.Title>
-          <Card.Text>
-            Some quick example text to build on the card title and make up the
-            bulk of the card's content.
-          </Card.Text>
-          <Button variant="primary">Go somewhere</Button>
-        </Card.Body>
-      </Card>
-      <Button variant="danger">main btn</Button>
+    <div className="container">
+    { news.length === 0 ?
+    <Spinner animation="border" role="status" className = 'mySpinner'>
+    
+  </Spinner>
+    
+    :   
+    <Row xs={1} md={3} className="g-4">
+        {news.map((nw) => (
+          <News news={nw} />
+        ))} 
+
+      </Row>}
     </div>
   );
 }
